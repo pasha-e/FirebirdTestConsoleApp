@@ -9,4 +9,10 @@
     <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="9.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="SQL_Scripts\createtable.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
