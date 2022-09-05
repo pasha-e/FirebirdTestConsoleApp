@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Data;
+using System.IO;
 using FirebirdSql.Data.FirebirdClient;
 
 namespace FirebirdTestConsoleApp
@@ -10,9 +11,18 @@ namespace FirebirdTestConsoleApp
         static void Main(string[] args)
         {
             using (FbConnection connection =
-                new FbConnection(@"Server=localhost;User=SYSDBA;Password=master;Database=C:\firebird\testdb.fdb"))
+                new FbConnection(@"Server=localhost;User=SYSDBA;Password=master;Database=C:\firebird\testcreate.fdb"))
             {
                 connection.Open();
+
+                if (CreateTables(connection, @"c:\firebird\createtable.sql"))
+                {
+                    Console.WriteLine("Tables for samples creates succesfully.");
+                }
+                else
+                {
+                    Console.WriteLine("Tables for samples creates previously.");
+                }
 
                 DataTable dt = new DataTable();
 
@@ -67,6 +77,50 @@ namespace FirebirdTestConsoleApp
                     Console.WriteLine(String.Format("{0} {1}",CreateRowString((DataRow)row), postStr));
                 }
             }
+        }
+
+
+        private static bool CreateTables(FbConnection connection, string path)
+        {
+            bool result = false;
+
+            try
+            {
+                string sqlText = String.Empty;
+                using (StreamReader reader = new StreamReader(path))
+                {
+                    sqlText = reader.ReadToEnd();
+                }
+
+                sqlText = sqlText.Replace("\r\n", "");
+
+                var sqlTextList = sqlText.Split(";", StringSplitOptions.RemoveEmptyEntries);
+
+                for (int i = 0; i < sqlTextList.Length; i++)
+                {
+                    sqlTextList[i] += ";";
+
+                }
+
+
+                foreach (var sqlCmd in sqlTextList)
+                {
+                    FbCommand cmd = new FbCommand(sqlCmd);
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = connection;
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                result = true;
+            }
+            catch (Exception e)
+            {
+                //Console.WriteLine(e);
+            }
+
+            return result;
+
         }
 
         static string CreateRowString(DataRow row)
