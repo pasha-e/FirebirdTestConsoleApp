@@ -10,9 +10,9 @@ namespace FirebirdTestConsoleApp
 	{
 		static void Main(string[] args)
 		{
-			string appParh = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName)+ @"\";
+			string appPath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName)+ @"\";
 			string connectionString =
-				@$"Server=localhost;User=SYSDBA;Password=master;Database={appParh}testdb2.fdb";
+				@$"Server=localhost;User=SYSDBA;Password=master;Database={appPath}testdb2.fdb";
 
 			FbConnection.CreateDatabase(connectionString,8192,true,true);
 			using (FbConnection connection = new FbConnection(connectionString))
