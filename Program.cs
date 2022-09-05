@@ -14,18 +14,19 @@ namespace FirebirdTestConsoleApp
             {
                 connection.Open();
 
-
                 DataTable dt = new DataTable();
 
+                //создаём адаптер к соединению с БД, выполняющий sql запрос
                 FbDataAdapter da = new FbDataAdapter("select * from employer", connection);
+                //с помощью этого адаптера заполняем табличку результатом запроса
                 da.Fill(dt);
 
+                //вывод результата
                 Console.WriteLine("Table Employer\n");
                 foreach (var row in dt.Rows)
                 {
                     Console.WriteLine(CreateRowString((DataRow)row));
                 }
-
 
                 dt = new DataTable();
                 da = new FbDataAdapter("select * from post", connection);
@@ -36,7 +37,6 @@ namespace FirebirdTestConsoleApp
                 {
                     Console.WriteLine(CreateRowString((DataRow)row));
                 }
-
 
                 //выведем связанные данные Employer - Post
                 dt = new DataTable();
@@ -66,7 +66,6 @@ namespace FirebirdTestConsoleApp
 
                     Console.WriteLine(String.Format("{0} {1}",CreateRowString((DataRow)row), postStr));
                 }
-
             }
         }
 
